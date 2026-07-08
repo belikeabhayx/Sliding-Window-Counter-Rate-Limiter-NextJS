@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import { ResizableLayout } from "@/components/ResizableLayout";
 import { ConfigPlayground } from "@/components/ConfigPlayground";
+import { BucketTimeline } from "@/components/BucketTimeline";
 import { MockClock } from "@/lib/rate-limiter/core/clock";
 import { MemoryStorageAdapter } from "@/lib/rate-limiter/storage/memory";
 import { SlidingWindowCounterLimiter } from "@/lib/rate-limiter/core/limiter";
@@ -112,19 +113,17 @@ export default function Home() {
         />
       }
       center={
-        <div style={{ padding: "20px" }}>
-          <h2 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "8px" }}>Sliding Window Simulation</h2>
-          <p style={{ fontSize: "13px", opacity: 0.7, marginBottom: "20px" }}>
-            Current Simulated Time: <span style={{ fontFamily: "monospace", fontWeight: 600 }}>{simTimeMs}ms</span>
-          </p>
-          <div style={{ padding: "16px", background: "rgba(255,255,255,0.03)", border: "1px solid var(--panel-border)", borderRadius: "8px" }}>
-            <h4 style={{ fontSize: "14px", fontWeight: 600, marginBottom: "10px" }}>Active Parameters</h4>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px", fontSize: "12px", fontFamily: "monospace" }}>
-              <div>Window: {config.windowSizeMs / 1000}s</div>
-              <div>Bucket: {config.bucketSizeMs / 1000}s</div>
-              <div>Limit: {config.limit}</div>
-            </div>
+        <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "20px" }}>
+          <div>
+            <h2 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "4px", letterSpacing: "-0.01em" }}>
+              Sliding Window Simulation
+            </h2>
+            <p style={{ fontSize: "13px", opacity: 0.7 }}>
+              Current Simulated Time: <span style={{ fontFamily: "monospace", fontWeight: 600 }}>{simTimeMs}ms</span>
+            </p>
           </div>
+          
+          <BucketTimeline config={config} simTimeMs={simTimeMs} events={events} />
         </div>
       }
       right={
