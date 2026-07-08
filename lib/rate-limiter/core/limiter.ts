@@ -63,6 +63,7 @@ export class SlidingWindowCounterLimiter {
       allowed,
       remaining,
       resetTimeMs,
+      retryAfterMs,
       estimatedCount,
       telemetry: {
         currentBucketStart: state.currentBucketStart,

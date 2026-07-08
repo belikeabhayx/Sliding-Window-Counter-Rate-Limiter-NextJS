@@ -35,6 +35,8 @@ export interface RateLimitResult {
   readonly remaining: number;
   /** The epoch timestamp in milliseconds when the limit fully resets. */
   readonly resetTimeMs: number;
+  /** The recommended retry-after delay in milliseconds if rejected. */
+  readonly retryAfterMs: number;
   /** The interpolated estimated request count across the sliding window. */
   readonly estimatedCount: number;
   /** Detailed debug telemetry of the window state at the moment of evaluation. */
