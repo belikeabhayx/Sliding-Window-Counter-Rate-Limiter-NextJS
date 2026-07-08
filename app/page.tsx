@@ -5,6 +5,7 @@ import { ResizableLayout } from "@/components/ResizableLayout";
 import { ConfigPlayground } from "@/components/ConfigPlayground";
 import { BucketTimeline } from "@/components/BucketTimeline";
 import { MathInspector } from "@/components/MathInspector";
+import { EventStream } from "@/components/EventStream";
 import { MockClock } from "@/lib/rate-limiter/core/clock";
 import { MemoryStorageAdapter } from "@/lib/rate-limiter/storage/memory";
 import { SlidingWindowCounterLimiter } from "@/lib/rate-limiter/core/limiter";
@@ -52,6 +53,13 @@ export default function Home() {
   const handleConfigChange = (newConfig: RateLimitConfig) => {
     setConfig(newConfig);
     limiterRef.current = new SlidingWindowCounterLimiter(newConfig, storageRef.current!, clockRef.current!);
+  };
+
+  const handleClearLogs = () => {
+    setEvents([]);
+    if (storageRef.current) {
+      storageRef.current.clear();
+    }
   };
 
   const processRequest = async (timeOffsetMs: number) => {
@@ -130,36 +138,11 @@ export default function Home() {
         </div>
       }
       right={
-        <div style={{ padding: "20px", display: "flex", flexDirection: "column", height: "100%" }}>
-          <h3 style={{ fontSize: "15px", fontWeight: 600, marginBottom: "16px" }}>Event Logs ({events.length})</h3>
-          <div style={{ flexGrow: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: "8px" }}>
-            {events.length === 0 ? (
-              <p style={{ fontSize: "12px", opacity: 0.5, textAlign: "center", marginTop: "40px" }}>No requests sent yet.</p>
-            ) : (
-              events.map((e) => (
-                <div key={e.id} style={{ padding: "10px", background: "rgba(255,255,255,0.02)", border: "1px solid var(--panel-border)", borderRadius: "6px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div>
-                    <span style={{ fontSize: "12px", fontFamily: "monospace", fontWeight: 600 }}>{e.id}</span>
-                    <span style={{ fontSize: "10px", opacity: 0.5, marginLeft: "8px" }}>{e.timestamp}ms</span>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ fontSize: "11px", fontFamily: "monospace" }}>{e.estimatedCount.toFixed(2)} / {config.limit}</span>
-                    <span style={{
-                      padding: "2px 6px",
-                      borderRadius: "4px",
-                      fontSize: "10px",
-                      fontWeight: 600,
-                      background: e.allowed ? "rgba(34,197,94,0.1)" : "rgba(239,68,68,0.1)",
-                      color: e.allowed ? "#4ade80" : "#f87171"
-                    }}>
-                      {e.allowed ? "ALLOW" : "BLOCK"}
-                    </span>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+        <EventStream
+          events={events}
+          limit={config.limit}
+          onClear={handleClearLogs}
+        />
       }
     />
   );
