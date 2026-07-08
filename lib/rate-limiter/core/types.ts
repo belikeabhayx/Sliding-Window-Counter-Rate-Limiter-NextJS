@@ -1,3 +1,5 @@
+import { RateLimitKey } from "./brands";
+
 /**
  * Core type definitions for the Sliding Window Counter Rate Limiter.
  * Enforces immutable state and strict domain contracts.
@@ -50,7 +52,7 @@ export interface StorageAdapter {
    * @param key The rate limit identifier (e.g., "rate_limit:user_123").
    * @param minTimestampMs The earliest bucket timestamp we care about (current time - window size).
    */
-  getBuckets(key: string, minTimestampMs: number): Promise<readonly Bucket[]>;
+  getBuckets(key: RateLimitKey, minTimestampMs: number): Promise<readonly Bucket[]>;
 
   /**
    * Increments the count for a specific bucket and sets/extends its TTL.
@@ -61,5 +63,6 @@ export interface StorageAdapter {
    * @param ttlMs Time-to-live for the bucket storage key.
    * @returns The updated count for that bucket.
    */
-  increment(key: string, bucketTimestamp: number, amount: number, ttlMs: number): Promise<number>;
+  increment(key: RateLimitKey, bucketTimestamp: number, amount: number, ttlMs: number): Promise<number>;
 }
+
