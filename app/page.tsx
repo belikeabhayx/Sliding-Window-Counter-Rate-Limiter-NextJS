@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import { ResizableLayout } from "@/components/ResizableLayout";
 import { ConfigPlayground } from "@/components/ConfigPlayground";
 import { BucketTimeline } from "@/components/BucketTimeline";
+import { MathInspector } from "@/components/MathInspector";
 import { MockClock } from "@/lib/rate-limiter/core/clock";
 import { MemoryStorageAdapter } from "@/lib/rate-limiter/storage/memory";
 import { SlidingWindowCounterLimiter } from "@/lib/rate-limiter/core/limiter";
@@ -124,6 +125,8 @@ export default function Home() {
           </div>
           
           <BucketTimeline config={config} simTimeMs={simTimeMs} events={events} />
+          
+          <MathInspector config={config} lastEvent={events[0] || null} />
         </div>
       }
       right={
