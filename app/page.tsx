@@ -6,6 +6,7 @@ import { ConfigPlayground } from "@/components/ConfigPlayground";
 import { BucketTimeline } from "@/components/BucketTimeline";
 import { MathInspector } from "@/components/MathInspector";
 import { EventStream } from "@/components/EventStream";
+import { RedisInspector } from "@/components/RedisInspector";
 import { MockClock } from "@/lib/rate-limiter/core/clock";
 import { MemoryStorageAdapter } from "@/lib/rate-limiter/storage/memory";
 import { SlidingWindowCounterLimiter } from "@/lib/rate-limiter/core/limiter";
@@ -138,11 +139,16 @@ export default function Home() {
         </div>
       }
       right={
-        <EventStream
-          events={events}
-          limit={config.limit}
-          onClear={handleClearLogs}
-        />
+        <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
+          <div style={{ flexGrow: 1, overflow: "hidden" }}>
+            <EventStream
+              events={events}
+              limit={config.limit}
+              onClear={handleClearLogs}
+            />
+          </div>
+          <RedisInspector config={config} lastEvent={events[0] || null} />
+        </div>
       }
     />
   );
